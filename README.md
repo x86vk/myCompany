@@ -3,8 +3,6 @@ A really "Software-Engineeringy" practice for making the company management syst
 
 **欢迎来到“软件工程”期末大作业的git存储库**
 
-[TOC]
-
 # 简介
 
 这次我们的任务是开发一个公司管理系统，详见`docs/requirement`中的介绍。
