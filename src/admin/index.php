@@ -21,7 +21,7 @@
     <div class="nav-wrapper blue" >
     <a href="#" class="brand-logo center">管理员</a>
     <ul id="nav-moblie" class="left hide-on-med-and-down">
-		<li><a href="subject.php">修改科目</a></li>
+		<li><a href="subject.php">修改项目</a></li>
 		<li><a href="user.php">修改用户</a></li>
 	</ul>
 	<ul id="nav-moblie" class="right hide-on-med-and-down">
@@ -44,17 +44,17 @@
           break;
         }
         unset($output);
-        $ret = exec("echo '".$buffer."' | "."awk -F ' ' '{print $3;} '", $output, $var);
+        //$ret = exec("echo '".$buffer."' | "."awk -F ' ' '{print $3;} '", $output, $var);
         ?>
         <li>
         <div class="collapsible-header"><i class="material-icons">mode_edit</i>
-        <?echo $output[0];?>
+        <?//echo $output[0];?>
         </div>
         <div class="collapsible-body grey lighten-4"><p>
         时间:<?
         unset($output);
-        $ret = exec("echo '".$buffer."' | "."awk -F ' ' '{print $1 \" \" $2;} '", $output, $var);
-        echo $output[0];
+       // $ret = exec("echo '".$buffer."' | "."awk -F ' ' '{print $1 \" \" $2;} '", $output, $var);
+        //echo $output[0];
         ?></p>
     <?}?>
    <? fclose($handle);
@@ -62,6 +62,7 @@
     ?>
 
     <?
+    /*
     $handle = @fopen(WebRoot."/log/log_info.txt", "r");
     if ($handle) {
     while (!feof($handle)) {
@@ -84,7 +85,7 @@
         ?></p>
     <?}?>
    <? fclose($handle);
-}
+}*/
     ?>
 
     </ul>

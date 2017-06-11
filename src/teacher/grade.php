@@ -19,17 +19,14 @@ require_once(WebRoot."/lib/mysql.php");
   <body class=" grey lighten-3">
     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">教师</a>
+        <a href="#" class="brand-logo center">委托员工</a>
         <ul id="nav-moblie" class="right hide-on-med-and-down">
           <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
         </ul>
       </div>
     </nav>
-    <div class="container">
-      <br>
-      <h4 class="center">这是学生<?echo $_GET["User"];?>的成绩</h4>
-      <br>
-      <?
+
+<?
 $isEdit=false;
 $User=0;
 if (isset($_GET["User"])) $User=$_GET["User"];
@@ -41,13 +38,18 @@ if (isLogin() && getUserType()==1){
 	  $Name=getName($User);
 }?>
 
+    <div class="container">
+      <br>
+      <h4 class="center">这是员工<?echo $Name;?>的概况</h4>
+      <br>
+
         <table id="grade" class="centered white z-depth-3">
           <thead>
             <tr>
               <th type="number">编号</th>
-              <th>课程名</th>
-              <th type="number">绩点</th>
-              <th type="number">成绩</th>
+              <th>项目名</th>
+              <th type="number">优先级</th>
+              <th type="number">时长</th>
             </tr>
           </thead>
           <tbody>
@@ -102,25 +104,25 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input disabled value="0" id="Edit_ID" type="text" class="validate">
-            <label for="Edit_ID">课程ID</label>
+            <label for="Edit_ID">项目ID</label>
           </div>
         </div>
         <div class="row">
             <div class="input-field col s10 offset-s1">
               <input disabled value="0" id="Edit_Name" type="text" class="validate">
-              <label for="Edit_Name">学生姓名</label>
+              <label for="Edit_Name">姓名</label>
             </div>
         </div>
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input disabled value="0" id="Edit_User" type="text" class="validate">
-            <label for="Edit_User">学号</label>
+            <label for="Edit_User">用户名</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input id="Edit_Score" type="text" class="validate" value="0">
-            <label for="Edit_Score">分数</label>
+            <label for="Edit_Score">时长</label>
           </div>
         </div>
       </div>

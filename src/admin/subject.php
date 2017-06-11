@@ -42,10 +42,10 @@ $selectOK = $database->get("select_sb","val",[]);
 <table id="nihao" class="responsive-table centered z-depth-3 white">
         <thead>
           <tr>
-              <th data-field="name">课程名称</th>
-              <th data-field="gpa" type="number">课程绩点</th>
-              <th data-field="teacher">任课老师</th>
-							<th data-field="class">上课地点</th>
+              <th data-field="name">项目名称</th>
+              <th data-field="gpa" type="number">优先级</th>
+              <th data-field="teacher">总负责</th>
+							<th data-field="class">分部地点</th>
 							<th data-field="edit">修改</th>
           </tr>
         </thead>

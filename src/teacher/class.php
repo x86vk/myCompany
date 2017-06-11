@@ -21,7 +21,7 @@ require_once(WebRoot."/lib/mysql.php");
   <body class=" grey lighten-3">
     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">教师</a>
+        <a href="#" class="brand-logo center">委托员工</a>
         <ul id="nav-moblie" class="right hide-on-med-and-down">
           <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
         </ul>
@@ -29,14 +29,14 @@ require_once(WebRoot."/lib/mysql.php");
     </nav>
     <div class="container">
     <br>
-     <h4 class="center">这些是<?echo $_GET["Class"];?>班的学生</h4>
+     <h4 class="center">这些是部门<?echo $_GET["Class"];?>的员工</h4>
      <br>
     <ul class="table z-depth-3">
     <table id="ahaha" class="centered white">
     <thead>
       <tr>
         <th data-field="name">姓名</th>
-        <th data-field="user" type="number">学号</th>
+        <th data-field="user" type="number">工号</th>
         <th data-field="modify">修改</th>
       </tr>
     </thead>
@@ -45,13 +45,13 @@ require_once(WebRoot."/lib/mysql.php");
       <?
 if (!(isLogin() && getUserType()==TypeTeacher)) die("Error");
 if (!isset($_GET["Class"])) die("Error");
-$UserArray = $database->select("user",["name","user"],[]);
+$UserArray = $database->select("user",["name","user","number"],[]);
 foreach($UserArray as $SingleUser){
     if ($database->get("user","type",["user"=>$SingleUser["user"]])==TypeStudent
     && $database->has("classBel",["AND"=>["user"=>$SingleUser["user"],"class"=>$_GET["Class"]]])){
         ?>
         <td><?echo $SingleUser["name"];?></td>
-        <td><?echo $SingleUser["user"];?></td>
+        <td><?echo $SingleUser["number"];?></td>
         <td>
         <a class="btn-floating waves-effect waves-light" href="<?echo WebUrl."/teacher/grade.php?User=".$SingleUser["user"]; ?>" target="_blank">
         <i class="material-icons">mode_edit</i>

@@ -5,7 +5,7 @@ require_once(dirname(__FILE__).'/../lib/chromePHP.php');
 define("TypeStudent",1);
 define("TypeTeacher",2);
 define("TypeAdmin",3);
-
+define("HourEmp",4);
 if (isset($_POST["logout"]) && $_POST["logout"]==true) logout();
 
 /*
@@ -96,6 +96,20 @@ function logout(){
     setcookie('loginUser',"",time()-36000,"/");
     setcookie('loginCookie',"",time()-36000,"/");
     setcookie('loginType',"",time()-36000,"/");
+}
+
+
+/*
+创建员工号
+*/
+
+function GetUsernum(){
+    return date('YmdHis',time());
+}
+
+function _GetUsernum($User){
+    global $database;
+    return $database->get("user","number", ["user" => $User]);
 }
 
 ?>
