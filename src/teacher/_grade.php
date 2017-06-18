@@ -29,7 +29,7 @@
 	        if ($Old_score != $Score){
 	            $time = $database->get("grade","time",["AND" =>["user"=>$User, 'subject'=>trim($Subject)]]);
 	            $te_name=$database->get("user","name",["user"=>getUserID()]);
-	            $text = $time."\t".$name."的".$Sb_name."成绩被".$te_name."老师修改了\r\n";
+	            $text = $time."\t".$name."的".$Sb_name."工作时长被".$te_name."[委托员工]修改为".$Score."小时\r\n";
 	            fwrite($logfile, $text);
 
 	        }

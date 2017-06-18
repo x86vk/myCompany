@@ -4,7 +4,7 @@
     $type=$_POST["type"];
     $name=$_POST["name"];
     $Phone=$_POST["phone"];
-
+    $pay_method=$_POST["pay_method"];
     require_once(dirname(__FILE__).'/../config.php');
     require_once(WebRoot."/login/loginLib.php");
     require_once(WebRoot."/lib/mysql.php");
@@ -23,7 +23,7 @@
         }else if($type==1) {
             $OldPassword = $database->get("user", "password", ["user" => $User]);
             $OldPhone = $database->get("user", "phone", ["user" => $User]);
-            echo $database->update("user", ["name" => $name, "password" => $Password, "phone" => $Phone], ["user" => $User]);
+            echo $database->update("user", ["name" => $name, "password" => $Password, "phone" => $Phone,"payment_method"=>$pay_method], ["user" => $User]);
             if ($OldPassword != $Password){
                 $time = $database->get("user","time",["user"=>$User]);
                 $text = $time."\t".$name . "修改密码\r\n";

@@ -9,7 +9,7 @@ require_once(WebRoot."/lib/mysql.php");
 
   <head>
     <!--Import materialize.css-->
-    <title>任课班级-教师-学生成绩管理系统</title>
+    <title>部门-委托员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32">
 <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
@@ -21,10 +21,7 @@ require_once(WebRoot."/lib/mysql.php");
   <body class=" grey lighten-3">
     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">委托员工</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
+        <a href="#" class="brand-logo center"><i class="material-icons">perm_identity</i>委托员工</a>
       </div>
     </nav>
     <div class="container">

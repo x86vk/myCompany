@@ -4,13 +4,13 @@ require_once(WebRoot."/login/loginLib.php");
 require_once(WebRoot."/lib/mysql.php");
 isLogin();
 
-$selectOK = $database->get("select_sb","val",[]);
+$selectOK = $database->get("select_sb", "val", []);
 ?>
   <!DOCTYPE html>
   <html>
 
   <head>
-    <title>打印报告-管理员-公司管理系统</title>
+    <title>打印报告-管理员-ACME公司管理系统</title>
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
@@ -21,19 +21,30 @@ $selectOK = $database->get("select_sb","val",[]);
   </head>
 
   <body class=" grey lighten-3">
-    <nav>
-      <div class="nav-wrapper blue">
-        <a href="#" class="brand-logo center">管理员</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="index.php">主页面</a></li>
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
-        <ul id="nav-moblie" class="left hide-on-med-and-down">
-          <li><a href="subject.php">修改科目</a></li>
-          <li><a href="user.php">修改用户</a></li>
-          <li><a href="#" onClick="showSettings();">设置</a></li>
+    <ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="../images/office.jpg">
       </div>
-    </nav>
+      <a href="#!user"><img class="circle" src="../images/g.jpg"></a>
+      <a href="#!name"><span class="white-text name">管理员</span></a>
+      <a href="#!email"><span class="white-text email">ACME网络有限公司</span></a>
+    </div></li>
+    <li><a href="user.php"><i class="material-icons">assignment_ind</i>修改用户</a></li>
+    <li><a href="subject.php"><i class="material-icons">recent_actors</i>修改项目</a></li>
+    <li><a href="report.php"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
+    <li><a href="#" onClick="showSettings();"><i class="material-icons">settings</i>设置</a></li>
+    <li><a href="../login/index.php" onClick="delAllCookie();"><i class="material-icons">replay</i>登出</a></li>
+  </ul>
+  
+  <nav>
+    <div class="nav-wrapper blue">
+    <a href="#" class="brand-logo center"><i class="material-icons">supervisor_account</i>管理员</a>
+    </div>
+  </nav> 
+  
     <div class="row">
       <br>
       <h5 class="center">以下为所有用户的信息</h5>
@@ -53,15 +64,15 @@ $selectOK = $database->get("select_sb","val",[]);
         </thead>
         <tbody>
 
-          <?
-$nowUserArray=$database->select("user",["user","number","password","type","name","phone"],[]);
-foreach($nowUserArray as $nowUser){
-    if($_GET['type'] && $_GET['type'] != $nowUser["type"]) {
-        continue;
-    }
-    ?>
-            <tr>
-              <td>
+            <?
+            $nowUserArray=$database->select("user", ["user","number","password","type","name","phone"], []);
+            foreach ($nowUserArray as $nowUser) {
+                if ($_GET['type'] && $_GET['type'] != $nowUser["type"]) {
+                    continue;
+                }
+                ?>
+                        <tr>
+                          <td>
                 <?echo $nowUser["user"];?>
               </td>
               <td>
@@ -75,27 +86,26 @@ foreach($nowUserArray as $nowUser){
               </td>
               <td>
                 <?
-    if($nowUser["type"] == 1) {
-        echo "员工";
-    }
-    else if($nowUser["type"] == 2) {
-        echo "委托员工";
-    }
-    else if($nowUser['type'] == 4) {
-        echo "小时工";
-    }
-    else if($nowUser["type"] == 3) {
-        echo "管理员";
-    }
-    ?>
-              </td>
-              <td width="20%">
-                <a class="btn-floating waves-effect waves-light green darken-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onEdit(<?echo $nowUser["user"];?>,'<?echo $nowUser["name"];?>');"> 
+                if ($nowUser["type"] == 1) {
+                    echo "员工";
+                } elseif ($nowUser["type"] == 2) {
+                    echo "委托员工";
+                } elseif ($nowUser['type'] == 4) {
+                    echo "小时工";
+                } elseif ($nowUser["type"] == 3) {
+                    echo "管理员";
+                }
+                ?>
+                          </td>
+                          <td width="20%">
+                <a class="btn-floating waves-effect waves-light green darken-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) {
+                    echo " disabled ";
+}?>" id="edit" onClick="onEdit(<?echo $nowUser["user"];?>,'<?echo $nowUser["name"];?>');"> 
                 <i class="material-icons">mode_edit</i>
                </a>
               </td>
             </tr>
-        <?}?>
+            <?                                                                                                                                                                                                                                                                                                                        }?>
         </tbody>
       </table>
       <!-- Edit Modal Structure -->
@@ -158,38 +168,7 @@ foreach($nowUserArray as $nowUser){
         <div class="modal-footer">
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
           <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="print();">确定</a>
-        </div>
-      </div>
-      <div id="modalSubject" class="modal modal-fixed-footer">
-        <div class="modal-content">
-          <h4 id="SB_Title" class="center">Edit Subject For ???</h4>
-          <div class="row">
-            <form class="col s10 offset-s1">
-              <div class="input-field col s12">
-                <input disabled value="0" id="SB_User" type="text" class="validate">
-                <label for="SB_User">用户ID</label>
-              </div>
-              <div class="input-field col s12">
-                <?
-$nowSubjectArray=$database->select("subject",["id","name"],[]);
-foreach($nowSubjectArray as $nowSubject){
-    ?>
-                  <p>
-                    <input type="checkbox" checked="checked" id="Subject-<?echo $nowSubject["id"];?>" />
-                    <label for="<?echo 'Subject-'.$nowSubject["id"];?>">
-                      <?echo $nowSubject["name"];?>
-                    </label>
-                  </p>
-                  <?
-}
-?>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick='window.location.href="";'>返回</a>
-          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editBelongSubject();">确定</a>
+          
         </div>
       </div>
       <div id="vKanBuDao" class="modal">
@@ -207,17 +186,17 @@ foreach($nowSubjectArray as $nowSubject){
               </div>
               <div class="input-field col s12">
                 <?
-$nowSubjectArray=$database->select("class",["id","name"],[]);
-foreach($nowSubjectArray as $nowSubject){
-    ?>
-                  <p>
+                $nowSubjectArray=$database->select("class", ["id","name"], []);
+                foreach ($nowSubjectArray as $nowSubject) {
+                    ?>
+                                  <p>
                     <input type="checkbox" checked="checked" id="Class-<?echo $nowSubject["id"];?>" />
                     <label for="<?echo 'Class-'.$nowSubject["id"];?>">
-                      <?echo $nowSubject["name"];?>
+                        <?echo $nowSubject["name"];?>
                     </label>
                   </p>
-                  <?
-}
+                                    <?
+                }
 ?>
               </div>
             </form>
@@ -231,16 +210,8 @@ foreach($nowSubjectArray as $nowSubject){
 
       <!-- Modal Trigger -->
 
-      <div class="fixed-action-btn horizontal" style="bottom: 120px; right: 24px;">
-        <a class="btn-floating btn-large red">
-          <i class="large material-icons">search</i>
-        </a>
-        <ul>
-          <li><a href="user.php?type=3" class="btn-floating red"><i class="material-icons">supervisor_account</i></a></li>
-          <li><a href="user.php?type=2" class="btn-floating yellow darken-1"><i class="material-icons">record_voice_over</i></a></li>
-          <li><a href="user.php?type=1" class="btn-floating green"><i class="material-icons">face</i></a></li>
-          <li><a href="user.php" class="btn-floating cyan darken-4"><i class="material-icons">list</i></a></li>
-        </ul>
+      <div class="fixed-action-btn horizontal" style="bottom: 48px; right: 24px;">
+        <a href="#" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
       </div>
       <!-- Edit Modal Structure -->
 
@@ -250,33 +221,34 @@ foreach($nowSubjectArray as $nowSubject){
           <h4 class="center">设置</h4>
           <div class="row">
             <form class="col s10 offset-s1">
-				<div class="row">
-					<div class="col s8">
-						<p>允许员工自由选项目</p>
-					</div>
-						<div class="switch">
-							<label>
-							不允许
-							<input id="selectCourse" type="checkbox" <?
-							if($selectOK)
-								echo 'checked="checked"';
-							?>>
-							<span class="lever"></span>
-							允许
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s7 offset-s1">
-					<p>当前缓存文件大小：<?
-					unset($output);
-					$ret = exec("du -sbch /var/www/html/Grade/log | awk '{print $1}'", $output, $var);
-					echo $output[0];
-					?></p>
-					</div>
-					<a class="waves-effect waves-light btn" onClick="clearLog()">删除缓存文件</a>
-				</div>
+                <div class="row">
+                    <div class="col s8">
+                        <p>允许员工自由选项目</p>
+                    </div>
+                        <div class="switch">
+                            <label>
+                            不允许
+                            <input id="selectCourse" type="checkbox" <?
+                            if ($selectOK) {
+                                echo 'checked="checked"';
+                            }
+                            ?>>
+                            <span class="lever"></span>
+                            允许
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s7 offset-s1">
+                    <p>当前缓存文件大小：<?
+                    unset($output);
+                    $ret = exec("du -sbch /var/www/html/Grade/log | awk '{print $1}'", $output, $var);
+                    echo $output[0];
+                    ?></p>
+                    </div>
+                    <a class="waves-effect waves-light btn" onClick="clearLog()">删除缓存文件</a>
+                </div>
             </form>
           </div>
         </div>
@@ -399,6 +371,7 @@ foreach($nowSubjectArray as $nowSubject){
       <script type="text/javascript">
         $(document).ready(function() {
           // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+          $(".button-collapse").sideNav();
           $('.modal').modal();
           $("#RE_Begin").hide();
           $("#RE_End").hide();
@@ -416,14 +389,14 @@ foreach($nowSubjectArray as $nowSubject){
           $('select').material_select();
         });
 
-		    $("#selectCourse").change(function() {
-			    if ($("#selectCourse").is(':checked')) {
-    				onEditSelectSB(1);
-    		  }
-    		  else {
-    				onEditSelectSB(0);
-    			}
-		    });
+            $("#selectCourse").change(function() {
+                if ($("#selectCourse").is(':checked')) {
+                    onEditSelectSB(1);
+              }
+              else {
+                    onEditSelectSB(0);
+                }
+            });
 
         function onEdit($user, $name) {
           $("#Edit_User").val($user);
@@ -435,17 +408,18 @@ foreach($nowSubjectArray as $nowSubject){
           $("#settings").modal("open");
         } 
 
-    		function clearLog() {
-    			$.post("_clearLog.php", 
-    			{
-    				"clear": 1
-    			}, function(data, status) {
-    				Materialize.toast('已删除缓存文件。', 1000);
-    			});
-    		}
+            function clearLog() {
+                $.post("_clearLog.php", 
+                {
+                    "clear": 1
+                }, function(data, status) {
+                    Materialize.toast('已删除缓存文件。', 1000);
+                });
+            }
 
         function print() {
           var p1=$("#RE_Type").val();
+          var name=$("#Edit_Name").val();
           if(p1==1){
           $.post("_printReport.php", {
               "user": $("#Edit_User").val(),
@@ -459,7 +433,10 @@ foreach($nowSubjectArray as $nowSubject){
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open("http://company.x86vk.com/mycompany/admin/" + name + 'work_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });
@@ -475,7 +452,10 @@ foreach($nowSubjectArray as $nowSubject){
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open("http://company.x86vk.com/mycompany/admin/" + name + 'pay_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });
@@ -487,10 +467,11 @@ foreach($nowSubjectArray as $nowSubject){
         function editBelongSubject() {
           $.post("_belSubjectEdit.php", { <?
               $nowSubjectArray = $database -> select("subject", ["id"], []);
-              foreach($nowSubjectArray as $nowSubject)
-              echo "\"Subject-".$nowSubject['id'].
-              "\":$(\"#Subject-".$nowSubject['id'].
-              "\").is(\":checked\"),";
+            foreach ($nowSubjectArray as $nowSubject) {
+                echo "\"Subject-".$nowSubject['id'].
+                "\":$(\"#Subject-".$nowSubject['id'].
+                "\").is(\":checked\"),";
+            }
               echo "\"user\":\$(\"#SB_User\").val()"; ?>
             },
             function(data, status) {
@@ -532,20 +513,22 @@ foreach($nowSubjectArray as $nowSubject){
 
         function editBelongClass() {
           var sum = 0; <?
-          $nowSubjectArray = $database -> select("class", ["id"], []);
-          foreach($nowSubjectArray as $nowSubject)
-          echo "if ($(\"#Class-".$nowSubject['id'].
-          "\").is(\":checked\")) sum++;"; ?>
+            $nowSubjectArray = $database -> select("class", ["id"], []);
+            foreach ($nowSubjectArray as $nowSubject) {
+                echo "if ($(\"#Class-".$nowSubject['id'].
+                "\").is(\":checked\")) sum++;";
+            } ?>
           if (sum > 1 && document.getElementById("quanjubianliang").val == 1) {
             Materialize.toast('Number Class Limited Error.', 1000);
             return;
           }
           $.post("_belClassEdit.php", { <?
 
-              foreach($nowSubjectArray as $nowSubject)
-              echo "\"Class-".$nowSubject['id'].
-              "\":$(\"#Class-".$nowSubject['id'].
-              "\").is(\":checked\"),";
+            foreach ($nowSubjectArray as $nowSubject) {
+                echo "\"Class-".$nowSubject['id'].
+                "\":$(\"#Class-".$nowSubject['id'].
+                "\").is(\":checked\"),";
+            }
               echo "\"user\":\$(\"#CL_User\").val()"; ?>
             },
             function(data, status) {
@@ -569,27 +552,6 @@ foreach($nowSubjectArray as $nowSubject){
             });
         }
 
-        function editSubject() {
-          $.post("_user.php", {
-              "user": $("#Edit_User").val(),
-              "password": $("#Edit_Password").val(),
-              "name": $("#Edit_Name").val(),
-              "type": $("#Edit_Type").val(),
-              "phone": $("#Edit_Phone").val(),
-              "Etype": 1
-            },
-            function(data, status) {
-              //alert(data);
-              if (data == 0) {
-                Materialize.toast('No Edition.', 1000);
-              } else if (data > 0) {
-                Materialize.toast('Edited.', 1000);
-                window.location.href = "";
-              } else {
-                Materialize.toast('Error.', 1000);
-              }
-            });
-        }
 
 
         function delAllCookie() {

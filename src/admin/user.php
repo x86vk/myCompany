@@ -10,7 +10,7 @@ $selectOK = $database->get("select_sb","val",[]);
   <html>
 
   <head>
-    <title>修改用户-管理员-学生成绩管理系统</title>
+    <title>修改用户-管理员-ACME公司管理系统</title>
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
@@ -21,19 +21,36 @@ $selectOK = $database->get("select_sb","val",[]);
   </head>
 
   <body class=" grey lighten-3">
-    <nav>
-      <div class="nav-wrapper blue">
-        <a href="#" class="brand-logo center">管理员</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="index.php">主页面</a></li>
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
-        <ul id="nav-moblie" class="left hide-on-med-and-down">
-          <li><a href="subject.php">修改科目</a></li>
-          <li><a href="report.php">打印报告</a></li>
-          <li><a href="#" onClick="showSettings();">设置</a></li>
+
+
+
+<ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="../images/office.jpg">
       </div>
-    </nav>
+      <a href="#!user"><img class="circle" src="../images/g.jpg"></a>
+      <a href="#!name"><span class="white-text name">管理员</span></a>
+      <a href="#!email"><span class="white-text email">ACME网络有限公司</span></a>
+    </div></li>
+    <li><a href="user.php"><i class="material-icons">assignment_ind</i>修改用户</a></li>
+    <li><a href="subject.php"><i class="material-icons">recent_actors</i>修改项目</a></li>
+    <li><a href="report.php"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
+    <li><a href="#" onClick="showSettings();"><i class="material-icons">settings</i>设置</a></li>
+    <li><a href="../login/index.php" onClick="delAllCookie();"><i class="material-icons">replay</i>登出</a></li>
+  </ul>
+
+
+
+  <nav>
+    <div class="nav-wrapper blue">
+    <a href="#" class="brand-logo center"><i class="material-icons">supervisor_account</i>管理员</a>
+    </div>
+  </nav>
+
+
     <div class="row">
       <br>
       <h5 class="center">以下为所有用户的信息</h5>
@@ -238,9 +255,12 @@ foreach($nowSubjectArray as $nowSubject){
 
       <!-- Modal Trigger -->
       <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+        <a href="#" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
+      </div>
+      <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" href="#modalNew"><i class="material-icons">add</i></a>
       </div>
-      <div class="fixed-action-btn horizontal" style="bottom: 120px; right: 24px;">
+      <div class="fixed-action-btn horizontal" style="bottom: 192px; right: 24px;">
         <a class="btn-floating btn-large red">
           <i class="large material-icons">search</i>
         </a>
@@ -251,6 +271,7 @@ foreach($nowSubjectArray as $nowSubject){
           <li><a href="user.php" class="btn-floating cyan darken-4"><i class="material-icons">list</i></a></li>
         </ul>
       </div>
+    </div>
       <!-- Edit Modal Structure -->
       <div id="modalNew" class="modal modal-fixed-footer">
         <div class="modal-content">
@@ -522,6 +543,7 @@ foreach($nowSubjectArray as $nowSubject){
       <script type="text/javascript">
         $(document).ready(function() {
           // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+          $(".button-collapse").sideNav();
           $('.modal').modal();
           $("#New_hour").hide();
           $("#New_salary").hide();

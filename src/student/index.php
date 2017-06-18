@@ -9,7 +9,7 @@
 <html>
   <head>    
   <!--Import materialize.css-->
-  <title>员工-公司管理系统</title>
+  <title>员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32">
 <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css"  media="screen,projection"/>
@@ -112,13 +112,13 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
   <span class="modal-footer">
   <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red"
-    href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time() + 28800);?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">结束</i></a>
+    href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">结束</i></a>
   </div>
   </span> 
   <span class="modal-footer">
   <div class="fixed-action-btn" style="bottom: 192px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
-    href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time() + 28800);?>');"<i class="material-icons">开始</i></a>
+    href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>');"<i class="material-icons">开始</i></a>
   </div>
   </span> 
   <span class="modal-footer">
@@ -133,7 +133,7 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
   <div id="modalChange" class="modal modal-fixed-footer">
       <div class="modal-content">
     <br>
-          <h4><div id="Edit_Title" class="center">设置密码</div></h4>
+          <h4><div id="Edit_Title" class="center">设置</div></h4>
           <br>
       <div class="row">
               <div class="input-field col s10 offset-s1">
@@ -147,6 +147,17 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
                   <label for="Edit_User">姓名</label>
               </div>
           </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <select id="Edit_Pay" type="text" class="validate" value="">
+              <option value="" disabled selected>请选择一项</option>
+              <option value="pickup">现金</option>
+              <option value="deposit">存款</option>
+              <option value="mail">邮寄</option>
+              </select>
+              <label for="Edit_Pay">薪水支付方式</label>
+          </div>
+        </div>
           <div class="row">
               <div class="input-field col s10 offset-s1">
                   <input value="<?echo $Phone;?>" id="Edit_Phone" type="text" class="validate">
@@ -351,13 +362,13 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
             <form class="col s10 offset-s1">
              <div class="row">
                 <div class="input-field col s12">
-                  <input disabled value="<?echo $User;?>" id="Edit_User" type="text" class="validate">
+                  <input disabled value="<?echo $User;?>" id="REdit_User" type="text" class="validate">
                   <label>账号</label>
                 </div>
               </div>
              <div class="row">
                 <div class="input-field col s12">
-                  <input disabled value="<?echo $Name;?>" id="Edit_Name" type="text" class="validate">
+                  <input disabled value="<?echo $Name;?>" id="REdit_Name" type="text" class="validate">
                   <label>姓名</label>
                 </div>
               </div>
@@ -527,6 +538,19 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
   $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal').modal();
+          $("#RE_Begin").hide();
+          $("#RE_End").hide();
+          $("#RE_Type").change(function(){
+              var p1=$(this).children('option:selected').val();
+              if(p1==2){
+                $("#RE_Begin").hide();
+                $("#RE_End").hide();
+              }
+              else{
+                $("#RE_Begin").show();
+                $("#RE_End").show();                
+              }
+          });
     $('select').material_select();
   });
   
@@ -708,6 +732,7 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
                 "name":$("#Student_Name").val(),
                 "password":$("#Edit_Password").val(),
                 "phone":$("#Edit_Phone").val(),
+                "pay_method": $("#Edit_Pay").val(),
                 "type":1
             },
             function(data,status){
@@ -763,10 +788,11 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
 
         function print() {
           var p1=$("#RE_Type").val();
+          var name=$("#REdit_Name").val();
           if(p1==1){
           $.post("_printReport.php", {
-              "user": $("#Edit_User").val(),
-              "name": $("#Edit_Name").val(),
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
               "re_name": $("#RE_Name").val(),
               "re_begin": $("#RE_Begin").val(),
               "re_end": $("#RE_End").val(),
@@ -776,15 +802,18 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'work_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });
           }
           else if(p1==2){
               $.post("_printReport.php", {
-              "user": $("#Edit_User").val(),
-              "name": $("#Edit_Name").val(),
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
               "re_name": $("#RE_Name").val(),
               "re_path": $("#RE_Pos").val(),
               "type": 2
@@ -792,7 +821,10 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'pay_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });

@@ -9,23 +9,21 @@ require_once(WebRoot."/lib/mysql.php");
 
   <head>
     <!--Import materialize.css-->
-    <title>学生成绩-教师-学生成绩管理系统</title>
+    <title>项目-委托员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32"><link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   </head>
 
   <body class=" grey lighten-3">
-    <nav>
+     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">委托员工</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
+        <a href="#" class="brand-logo center"><i class="material-icons">perm_identity</i>委托员工</a>
       </div>
     </nav>
-
+ 
 <?
 $isEdit=false;
 $User=0;

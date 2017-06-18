@@ -1,6 +1,6 @@
 <?
 	require_once(dirname(__FILE__).'/../config.php');
-	require_once("reportLib.php");
+	require_once(WebRoot."/reportLib.php");
 	require_once(WebRoot."/lib/mysql.php");
 	
 	$type=$_POST["type"];
@@ -22,14 +22,14 @@
 		$userArray=$database->select("AllTimecard",["uptime","downtime","project"],["user" => $user]);
 		foreach($userArray as $nowUser){
 			if($re_begin<=$nowUser["uptime"] && $re_end>=$nowUser["downtime"]){
-				$project_name=$database->get("Subject", "name", ["id" => $nowUser["project"]]);
+				$project_name=$database->get("subject", "name", ["id" => $nowUser["project"]]);
 				$report->insert_table_col($nowUser["uptime"], $nowUser["downtime"], $project_name);
 			}
 		}
 		
 		//$report->insert_table_col("2019", "100元");
-		$report->end_table(date('Y-m-d H:i:s',time()), "你工资真是太低了");
-		$report->output_html("./report.html");
+		$report->end_table(date('Y-m-d H:i:s',time()), "好好工作天天向上");
+		$report->output_html("./".$name."work_report.html");
 		echo 1;
 	}
 	else if($type==2){
@@ -56,8 +56,8 @@
 			}
 		}
 		
-		$report->end_table(date('Y-m-d H:i:s',time()), "你工资真是太低了");
-		$report->output_html("./pay_report.html");
+		$report->end_table(date('Y-m-d H:i:s',time()), "好好工作天天向上");
+		$report->output_html("./".$name."pay_report.html");
 		echo 2;	
 	}
 	echo 0;

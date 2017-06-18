@@ -9,7 +9,7 @@ $selectOK = $database->get("select_sb","val",[]);
 <!DOCTYPE html>
 <html>
   <head>
-	<title>订单-管理员-学生成绩管理系统</title>
+	<title>订单-委托员工-ACME公司管理系统</title>
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css"  media="screen,projection"/>
   <!--Let browser know website is optimized for mobile-->
@@ -36,18 +36,27 @@ $selectOK = $database->get("select_sb","val",[]);
 	  $isEdit=true;
 	  
   }?>
-  <nav>
-    <div class="nav-wrapper blue">
-    <a href="#" class="brand-logo center"><? echo $database->get("user","name",["user"=>$User]);?></a>
-    <ul id="nav-moblie" class="left hide-on-med-and-down">
-    <li><a href="employeepurchase.php">订单</a></li>
-    </ul>
-    <ul id="nav-moblie" class="right hide-on-med-and-down">
-		<li><a href="index.php">主页面</a></li>
-		<li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-	</ul>
-	</div>
-  </nav>
+  <ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="../images/office.jpg">
+      </div>
+      <a href="#!user"><img class="circle" src="../images/akuya.jpg"></a>
+      <a href="#!name"><span class="white-text name">委托员工</span></a>
+      <a href="#!email"><span class="white-text email"> </span></a>
+    </div></li>
+    <li><a href="employeepurchase.php"><i class="material-icons">recent_actors</i>订单</a></li>
+    <li><a href="#modalReport"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
+    <li><a href="#modalChange"><i class="material-icons">assignment_ind</i>设置</a></li>
+    <li><a href="../login/index.php" onClick="delAllCookie();"><i class="material-icons">replay</i>登出</a></li>
+  </ul>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center"><i class="material-icons">perm_identity</i>委托员工</a>
+      </div>
+    </nav>
 
 <div class="row">
 	<br>
@@ -86,12 +95,15 @@ $selectOK = $database->get("select_sb","val",[]);
 	</table>
 
   <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
-  	<a class="modal-trigger btn-floating btn-large waves-effect waves-light red"  href="#modalEdit"><i class="material-icons">修改</i></a>
+  	<a class="modal-trigger btn-floating btn-large waves-effect waves-light red"  href="#modalEdit"><i class="material-icons">create</i></a>
 	</div>
 
-  <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+  <div class="fixed-action-btn" style="bottom: 192px; right: 24px;">
   	<a class="modal-trigger btn-floating btn-large waves-effect waves-light red"  href="#modalNew"><i class="material-icons">add</i></a>
 	</div>
+  <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+        <a href="#" id="btn_nav" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
+      </div>
   <!-- Edit Modal Structure -->
   <div id="modalNew" class="modal modal-fixed-footer">
     <div class="modal-content">
@@ -162,6 +174,112 @@ $selectOK = $database->get("select_sb","val",[]);
   </div>
   </div>
 
+<div id="modalChange" class="modal modal-fixed-footer">
+      <div class="modal-content">
+        <h4 class="center"><div id="Edit_Title">个人信息</div></h4>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <input disabled value="<?echo $User;?>" id="Teacher_ID" type="text" class="validate">
+            <label for="Edit_ID">ID</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <input disabled value="<?echo $Name;?>" id="Teacher_Name" type="text" class="validate">
+            <label for="Edit_User">姓名</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <select id="Edit_Pay" type="text" class="validate" value="">
+              <option value="" disabled selected>请选择一项</option>
+              <option value="pickup">现金</option>
+              <option value="deposit">存款</option>
+              <option value="mail">邮寄</option>
+              </select>
+              <label for="Edit_Pay">薪水支付方式</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <input value="<?echo $Phone;?>" id="Edit_Phone" type="text" class="validate">
+            <label for="Edit_Phone">联系电话</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <input id="Edit_Password" type="text" class="validate" value="0">
+            <label for="Edit_Password">密码</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editPassword();">确定</a>
+        <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+      </div>
+    </div>
+
+ <div id="modalReport" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4 class="center">配置报告</h4>
+          <div class="row">
+            <form class="col s10 offset-s1">
+             <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="<?echo $User;?>" id="REdit_User" type="text" class="validate">
+                  <label>账号</label>
+                </div>
+              </div>
+             <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="<?echo $Name;?>" id="REdit_Name" type="text" class="validate">
+                  <label>姓名</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <select id="RE_Type">
+                    <option value="" disabled selected>请选择报告类型</option>
+                    <option value="1">总工作时长</option>
+                    <option value="2">年初至今工资</option>
+                  </select>
+                  <label>类型</label>
+                </div>
+              </div>
+              <label for="RE_Begin">起始日期</label>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="RE_Begin" type="date" class="validate" value="">
+                </div>
+              </div>
+              <label for="RE_End">终止日期</label>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="RE_End" type="date" class="validate" value="">
+                </div>
+              </div>
+
+             <div class="row">
+                <div class="input-field col s12">
+                  <input value="NULL" id="RE_Name" type="text" class="validate">
+                  <label for="RE_Name">报名名称</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="NULL" id="RE_Pos" type="text" class="validate">
+                  <label for="RE_Pos">存储位置</label>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="print();">确定</a>
+        </div>
+      </div>
 
 
 <div id="modaleditpurchase" class="modal modal-fixed-footer">
@@ -237,6 +355,7 @@ $selectOK = $database->get("select_sb","val",[]);
 	$(document).ready(function(){
 		// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
 		$('.modal').modal();
+    $("#btn_nav").sideNav();
     Materialize.updateTextFields();
     $('select').material_select();
 	});

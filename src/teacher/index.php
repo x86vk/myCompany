@@ -12,8 +12,9 @@ $Phone=$database->get("user","phone",["user"=>$User]);
 
   <head>
     <!--Import materialize.css-->
-    <title>教师-学生成绩管理系统</title>
+    <title>委托员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32"><link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -21,17 +22,25 @@ $Phone=$database->get("user","phone",["user"=>$User]);
 
 
   <body class=" grey lighten-3">
+    <ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="../images/office.jpg">
+      </div>
+      <a href="#!user"><img class="circle" src="../images/akuya.jpg"></a>
+      <a href="#!name"><span class="white-text name">委托员工</span></a>
+      <a href="#!email"><span class="white-text email">ACME网络有限公司</span></a>
+    </div></li>
+    <li><a href="employeepurchase.php"><i class="material-icons">recent_actors</i>订单</a></li>
+    <li><a href="#modalReport"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
+    <li><a href="#modalChange"><i class="material-icons">assignment_ind</i>设置</a></li>
+    <li><a href="../login/index.php" onClick="delAllCookie();"><i class="material-icons">replay</i>登出</a></li>
+  </ul>
     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">委托员工</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
-        <ul id="nav-moblie" class="left hide-on-med-and-down">
-          <li><a href="#modalChange">设置</a></li>
-          <li><a href="employeepurchase.php">订单</a></li>
-          <li><a href="#modalReport">打印报告</a></li>
-        </ul>
+        <a href="#" class="brand-logo center"><i class="material-icons">perm_identity</i>委托员工</a>
       </div>
     </nav>
     <br>
@@ -67,9 +76,10 @@ foreach($nowClassArray as $nowClass){
       </ul>
     </div>
     <br>
-    <h4 class="center">以下是您项目概要</h4>
+    <h4 class="center">以下是您的项目概要</h4>
     <br>
-
+<div class="container">
+      <ul class="collection z-depth-3">
    <table id="laosan" class="centered white z-depth-3">
           <thead>
             <tr>
@@ -121,25 +131,29 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
               <?}}else echo '<div class="center">No Such a person.</br>Maybe Error.</div>'?>
           </tbody>
         </table>
+        </ul>
+        </div>
 
 
+  <span class="modal-footer">
+    <div class="fixed-action-btn horizontal" style="bottom: 192px; right: 24px;">
+        <a class="btn-floating btn-large red">
+          <i class="large material-icons">account_circle</i>
+        </a>
+        <ul>
+          <li><a class="btn-floating green" href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>');"><i class="material-icons">play_arrow</i></a></li>
+          <li><a class="btn-floating red" href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">stop</i></a></li>
+        </ul>
+      </div>
+  </span> 
+  <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+        <a href="#" id="btn_nav" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
+      </div>
   <span class="modal-footer">
   <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red"
-    href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time() + 28800);?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">结束</i></a>
-  </div>
-  </span> 
-  <span class="modal-footer">
-  <div class="fixed-action-btn" style="bottom: 192px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
-    href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time() + 28800);?>');"<i class="material-icons">开始</i></a>
-  </div>
-  </span> 
-  <span class="modal-footer">
-  <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
 
-    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"<i class="material-icons">项目</i></a>
+    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"><i class="material-icons">assignment</i></a>
   </div>
   </span> 
 
@@ -157,6 +171,17 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
           <div class="input-field col s10 offset-s1">
             <input disabled value="<?echo $Name;?>" id="Teacher_Name" type="text" class="validate">
             <label for="Edit_User">姓名</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <select id="Edit_Pay" type="text" class="validate" value="">
+              <option value="" disabled selected>请选择一项</option>
+              <option value="pickup">现金</option>
+              <option value="deposit">存款</option>
+              <option value="mail">邮寄</option>
+              </select>
+              <label for="Edit_Pay">薪水支付方式</label>
           </div>
         </div>
         <div class="row">
@@ -230,7 +255,7 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
         <div class="input-field col s10 offset-s1">
           <input disabled value="0" id="SBTT_User" type="text" class="validate">
           <label for="SBTT_User">上班时间</label>
-        </div>
+        </div> 
       </div>
   </div>
  </div>
@@ -294,13 +319,13 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
             <form class="col s10 offset-s1">
              <div class="row">
                 <div class="input-field col s12">
-                  <input disabled value="<?echo $User;?>" id="Edit_User" type="text" class="validate">
+                  <input disabled value="<?echo $User;?>" id="REdit_User" type="text" class="validate">
                   <label>账号</label>
                 </div>
               </div>
              <div class="row">
                 <div class="input-field col s12">
-                  <input disabled value="<?echo $Name;?>" id="Edit_Name" type="text" class="validate">
+                  <input disabled value="<?echo $Name;?>" id="REdit_Name" type="text" class="validate">
                   <label>姓名</label>
                 </div>
               </div>
@@ -357,6 +382,7 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
       $(document).ready(function() {
         // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
         $('.modal').modal();
+        $("#btn_nav").sideNav();
         $('select').material_select();
           $("#RE_Begin").hide();
           $("#RE_End").hide();
@@ -379,6 +405,7 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
             "name": $("#Teacher_Name").val(),
             "password": $("#Edit_Password").val(),
             "phone": $("#Edit_Phone").val(),
+            "pay_method": $("#Edit_Pay").val(),
             "type": 3
           },
           function(data, status) {
@@ -509,10 +536,11 @@ function editTimecard()
 
         function print() {
           var p1=$("#RE_Type").val();
+          var name=$("#REdit_Name").val();
           if(p1==1){
           $.post("_printReport.php", {
-              "user": $("#Edit_User").val(),
-              "name": $("#Edit_Name").val(),
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
               "re_name": $("#RE_Name").val(),
               "re_begin": $("#RE_Begin").val(),
               "re_end": $("#RE_End").val(),
@@ -522,15 +550,18 @@ function editTimecard()
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'work_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });
           }
           else if(p1==2){
               $.post("_printReport.php", {
-              "user": $("#Edit_User").val(),
-              "name": $("#Edit_Name").val(),
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
               "re_name": $("#RE_Name").val(),
               "re_path": $("#RE_Pos").val(),
               "type": 2
@@ -538,7 +569,10 @@ function editTimecard()
             function(data, status) {
                 console.log(data);
                 if(data > 0)
+                {
                   Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'pay_report.html');
+                }
                 else
                   Materialize.toast('Error.', 1000);
             });
@@ -546,6 +580,8 @@ function editTimecard()
           
 
         }
+          
+
 
     </script>
   </body>

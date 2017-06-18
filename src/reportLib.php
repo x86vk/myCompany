@@ -1,12 +1,13 @@
 <?php
+require_once(dirname(__FILE__).'/config.php');
 class reportGenereator
 {
     private $now_word = "";
 
     public function __construct()
     {
-        $template = fopen("./reportTemplate.html", "r");
-        $this->now_word = fread($template, filesize("./reportTemplate.html"));
+        $template = fopen(WebRoot."/reportTemplate.html", "r");
+        $this->now_word = fread($template, filesize(WebRoot."/reportTemplate.html"));
         fclose($template);
     }
 
@@ -23,7 +24,7 @@ class reportGenereator
         $this->now_word .= $time_end;
         $this->now_word .= "</strong>的<strong>";
         $this->now_word .= $report_name;
-        $this->now_word .= "</strong>报告，请查阅：</p>";
+        $this->now_word .= "</strong>，请查阅：</p>";
     }
 
     public function init2($report_name)
@@ -58,7 +59,7 @@ class reportGenereator
         $this->now_word .= $time;
         $this->now_word .= "</em></p><p>";
         $this->now_word .= $words;
-        $this->now_word .= "</p></div></body></html>";
+        $this->now_word .= "</p></div></body></html><script type=\"text/javascript\">window.print()</script>";
     }
 
     public function output_html($path) {
