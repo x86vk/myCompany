@@ -68,7 +68,7 @@ function getName($User){
 function login($User,$Password){
     global $database;
     ChromePhp::log($database->error());
-    if (true && $database->has("user",[
+    if ($database->has("user",[
         "AND" => [
     "user" => $User,
     "password" => trim($Password)

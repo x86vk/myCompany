@@ -41,7 +41,7 @@
   
   <nav>
     <div class="nav-wrapper blue">
-    <a href="#" class="brand-logo center"><? echo $database->get("user","name",["user"=>$User]);?></a>
+    <a href="#" class="brand-logo center"><i class="material-icons">local_library</i><? echo $database->get("user","name",["user"=>$User]);?></a>
   <ul id="nav-moblie" class="right hide-on-med-and-down">
     <li><a href="../login/index.php" onClick="delAllCookie();">退出</a></li>
   </ul>
@@ -124,7 +124,7 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
   <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
 
-    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"<i class="material-icons">assignment</i></a>
+    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"><i class="material-icons">assignment</i></a>
   </div>
   </span> 
 </div>
@@ -259,9 +259,8 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
           <input disabled value="0" id="Pro_User" type="text" class="validate">
           <label for="Pro_User">员工号</label>
         </div>
-        <div class="input-field col s12 offset-s1">
+        <div class="input-field col s10 offset-s1">
         <select id = "select">
-        <option value="" disable selected>Choose your option</option>
         <?
       $nowSubjectArray=$database->select("subject",["id","name"],[]);
       foreach($nowSubjectArray as $nowSubject){
@@ -272,7 +271,7 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
       }
       ?>
         </select>
-        <label>下拉列表</label>
+        <label>项目</label>
         </div>
       </div>
   </div>
@@ -845,3 +844,4 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
   </script>
   </body>
 </html>
+

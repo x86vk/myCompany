@@ -29,6 +29,8 @@
     <li><a href="user.php"><i class="material-icons">assignment_ind</i>修改用户</a></li>
     <li><a href="subject.php"><i class="material-icons">recent_actors</i>修改项目</a></li>
     <li><a href="report.php"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><a href="../2017-25weekPaycheck.html" target="_blank"><i class="material-icons">open_in_browser</i>周报告</a></li>
+    <li><a href="../2017-06monthPaycheck.html" target="_blank"><i class="material-icons">open_in_browser</i>月工资</a></li>
     <li><div class="divider"></div></li>
     <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
     <li><a href="#" onClick="showSettings();"><i class="material-icons">settings</i>设置</a></li>

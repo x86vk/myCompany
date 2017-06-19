@@ -36,6 +36,8 @@ $selectOK = $database->get("select_sb","val",[]);
     <li><a href="user.php"><i class="material-icons">assignment_ind</i>修改用户</a></li>
     <li><a href="subject.php"><i class="material-icons">recent_actors</i>修改项目</a></li>
     <li><a href="report.php"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><a href="../2017-25weekPaycheck.html" target="_blank"><i class="material-icons">open_in_browser</i>周报告</a></li>
+    <li><a href="../2017-06monthPaycheck.html" target="_blank"><i class="material-icons">open_in_browser</i>月工资</a></li>
     <li><div class="divider"></div></li>
     <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
     <li><a href="#" onClick="showSettings();"><i class="material-icons">settings</i>设置</a></li>
@@ -110,7 +112,7 @@ foreach($nowUserArray as $nowUser){
                 <a class="btn-floating waves-effect waves-light brown lighten-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onEditClass(<?echo $nowUser["user"];?>,'<?echo $nowUser["name"];?>');"><i class="material-icons">business</i></a>
                 <a class="btn-floating waves-effect waves-light cyan  <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onEditSubject(<?echo $nowUser["user"];?>,'<?echo $nowUser["name"];?>');"><i class="material-icons">class</i></a>
                 <a class="btn-floating waves-effect waves-light green darken-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onEdit(<?echo $nowUser["number"];?>,<?echo $nowUser["user"];?>,<?echo $nowUser["type"];?>,'<?echo $nowUser["name"];?>','<?echo $nowUser["password"];?>','<?echo $nowUser["phone"];?>');"><i class="material-icons">mode_edit</i></a>
-                <a class="btn-floating waves-effect waves-light green darken-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onDimiss(<?echo $nowUser["number"];?>,<?echo $nowUser["user"];?>);"><i class="material-icons">mode_edit</i></a>
+                <a class="btn-floating waves-effect waves-light pink darken-2 <? if ($_COOKIE['loginUser']==$nowUser["user"]) echo " disabled ";?>" id="edit" onClick="onDimiss(<?echo $nowUser["number"];?>,<?echo $nowUser["user"];?>);"><i class="material-icons">track_changes</i></a>
               </td>
             </tr>
             <?}?>
@@ -257,10 +259,10 @@ foreach($nowSubjectArray as $nowSubject){
       <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
         <a href="#" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
       </div>
-      <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" href="#modalNew"><i class="material-icons">add</i></a>
+      <div class="fixed-action-btn" style="bottom: 192px; right: 24px;">
+        <a class="modal-trigger btn-floating btn-large waves-effect waves-light light-blue" href="#modalNew"><i class="material-icons">add</i></a>
       </div>
-      <div class="fixed-action-btn horizontal" style="bottom: 192px; right: 24px;">
+      <div class="fixed-action-btn horizontal" style="bottom: 120px; right: 24px;">
         <a class="btn-floating btn-large red">
           <i class="large material-icons">search</i>
         </a>

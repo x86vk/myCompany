@@ -215,9 +215,8 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>2]])){
           <input disabled value="0" id="Pro_User" type="text" class="validate">
           <label for="Pro_User">员工号</label>
         </div>
-        <div class="input-field col s12 offset-s1">
+        <div class="input-field col s10 offset-s1">
         <select id = "select">
-        <option value="" disable selected>Choose your option</option>
         <?
       $nowSubjectArray=$database->select("subject",["id","name"],[]);
       foreach($nowSubjectArray as $nowSubject){
