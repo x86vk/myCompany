@@ -1,200 +1,216 @@
 <?
-	require_once(dirname(__FILE__).'/../config.php');
-	require_once(WebRoot."/login/loginLib.php");
-	require_once(WebRoot."/lib/mysql.php");
+    require_once(dirname(__FILE__).'/../config.php');
+    require_once(WebRoot."/login/loginLib.php");
+    require_once(WebRoot."/lib/mysql.php");
 isLogin();
 
-$selectOK = $database->get("select_sb","val",[]);
+$selectOK = $database->get("select_sb", "val", []);
 ?>
 <!DOCTYPE html>
 <html>
-  <head>		
-	<title>修改科目-管理员-学生成绩管理系统</title>
+  <head>        
+    <title>修改项目-管理员-ACME公司管理系统</title>
   <!--Import materialize.css-->
   <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css"  media="screen,projection"/>
   <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
+    <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32">
-	</head>
+    </head>
 
   <body class=" grey lighten-3">
+  
+<ul id="slide-out" class="side-nav">
+    <li><div class="userView">
+      <div class="background">
+        <img src="../images/office.jpg">
+      </div>
+      <a href="#!user"><img class="circle" src="../images/g.jpg"></a>
+      <a href="#!name"><span class="white-text name">管理员</span></a>
+      <a href="#!email"><span class="white-text email">ACME网络有限公司</span></a>
+    </div></li>
+    <li><a href="user.php"><i class="material-icons">assignment_ind</i>修改用户</a></li>
+    <li><a href="subject.php"><i class="material-icons">recent_actors</i>修改项目</a></li>
+    <li><a href="report.php"><i class="material-icons">open_in_browser</i>打印报告</a></li>
+    <li><div class="divider"></div></li>
+    <li><a class="waves-effect" href="index.php"><i class="material-icons">store</i>主页面</a></li>
+    <li><a href="#" onClick="showSettings();"><i class="material-icons">settings</i>设置</a></li>
+    <li><a href="../login/index.php" onClick="delAllCookie();"><i class="material-icons">replay</i>登出</a></li>
+  </ul>
+  
   <nav>
     <div class="nav-wrapper blue">
-    <a href="#" class="brand-logo center">管理员</a>
-    <ul id="nav-moblie" class="left hide-on-med-and-down">
-		<li><a href="user.php">修改用户</a></li>
-    <li><a href="#" onClick="showSettings();">设置</a></li>
-    </ul>
-    <ul id="nav-moblie" class="right hide-on-med-and-down">
-		<li><a href="index.php">主页面</a></li>
-		<li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-	</ul>
-	</div>
-  </nav>
+    <a href="#" class="brand-logo center"><i class="material-icons">supervisor_account</i>管理员</a>
+    </div>
+  </nav> 
 <div class="row">
-	<br>
-  <h5 class="center">以下为本学期全部的课程</h1>
-	<br>
+    <br>
+  <h5 class="center">以下为全部的项目</h1>
+    <br>
 </div>
   <div class="container">
 <table id="nihao" class="responsive-table centered z-depth-3 white">
         <thead>
           <tr>
-              <th data-field="name">课程名称</th>
-              <th data-field="gpa" type="number">课程绩点</th>
-              <th data-field="teacher">任课老师</th>
-							<th data-field="class">上课地点</th>
-							<th data-field="edit">修改</th>
+              <th data-field="name">项目名称</th>
+              <th data-field="gpa" type="number">优先级</th>
+              <th data-field="teacher">总负责</th>
+                            <th data-field="class">分部地点</th>
+                            <th data-field="edit">修改</th>
           </tr>
         </thead>
         <tbody>
         
-					<?
-						$nowSubjectArray=$database->select("subject",["id","name","GPA"],[]);
-						foreach($nowSubjectArray as $nowSuject){
-					?>
-					<tr>
-							<td><?echo $nowSuject["name"];?></td>
-							<td><?echo $nowSuject["GPA"];?></td>
-							<td><?echo "洪琦均";?></td>
-							<td><?echo "南二-427";?></td>
-							<td><button class="btn waves-effect waves-light" type="button" id="edit" onClick="onEdit(<?echo $nowSuject["id"];?>,'<?echo $nowSuject["name"];?>','<?echo $nowSuject["GPA"];?>');">修改</button>
-		</td>
-					</tr>
-					<?}?>
-					</tbody>
-	</table>
+                    <?
+                        $nowSubjectArray=$database->select("subject", ["id","name","GPA"], []);
+                    foreach ($nowSubjectArray as $nowSuject) {
+                    ?>
+                    <tr>
+                    <td><?echo $nowSuject["name"];?></td>
+                    <td><?echo $nowSuject["GPA"];?></td>
+                    <td><?echo "洪琦均";?></td>
+                    <td><?echo "南二-427";?></td>
+                    <td><button class="btn waves-effect waves-light" type="button" id="edit" onClick="onEdit(<?echo $nowSuject["id"];?>,'<?echo $nowSuject["name"];?>','<?echo $nowSuject["GPA"];?>');">修改</button>
+        </td>
+                    </tr>
+                    <?                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }?>
+                    </tbody>
+    </table>
   
 
   <!-- Edit Modal Structure -->
   <div id="modalEdit" class="modal modal-fixed-footer">
     <div class="modal-content">
-				<h4 class="center">修改课程</h4>
-				<div class="row">
-					<form class="col s10 offset-s1">
-					<div class="row">
-						<div class="input-field col s12">
-							<input disabled value="0" id="Edit_Id" type="text" class="validate">
-							<label for="Edit_Id">课程ID</label>
-						</div>
-					</div>
-				<div class="row">
-						<div class="input-field col s12">
-							<input id="Edit_Name" type="text" class="validate" value="NULL">
-							<label for="Edit_Name">课程名称</label>
-						</div>
-					</div>
-				<div class="row">
-						<div class="input-field col s12">
-							<input id="Edit_GPA" type="text" class="validate" value="NULL">
-							<label for="Edit_GPA">课程绩点</label>
-						</div>
-					</div>
+                <h4 class="center">修改项目</h4>
+                <div class="row">
+                    <form class="col s10 offset-s1">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input disabled value="0" id="Edit_Id" type="text" class="validate">
+                            <label for="Edit_Id">项目ID</label>
+                        </div>
+                    </div>
+                <div class="row">
+                        <div class="input-field col s12">
+                            <input id="Edit_Name" type="text" class="validate" value="NULL">
+                            <label for="Edit_Name">名称</label>
+                        </div>
+                    </div>
+                <div class="row">
+                        <div class="input-field col s12">
+                            <input id="Edit_GPA" type="text" class="validate" value="NULL">
+                            <label for="Edit_GPA">优先级</label>
+                        </div>
+                    </div>
 
-				<div class="row">
-					<div class="input-field col s12">
-						<input id="Edit_Teacher" type="text" class="validate" value="0">
-						<label for="Edit_Teacher">任课教师</label>
-					</div>
-				</div>
-			<div class="row">
-					<div class="input-field col s12">
-						<input id="Edit_Place" type="text" class="validate" value="0">
-						<label for="Edit_Place">上课地点</label>
-					</div>
-				</div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Edit_Teacher" type="text" class="validate" value="0">
+                        <label for="Edit_Teacher">负责人</label>
+                    </div>
+                </div>
+            <div class="row">
+                    <div class="input-field col s12">
+                        <input id="Edit_Place" type="text" class="validate" value="0">
+                        <label for="Edit_Place">分部地点</label>
+                    </div>
+                </div>
 
-				</form>
-			</div>
+                </form>
+            </div>
     </div>
       <div class="modal-footer">
-				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
-	  		<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" onClick="editSubject();">修改</a>
-				<a href="#!" class="modal-action modal-close waves-effect  tooltipped waves-red btn-flat" data-position="bottom" data-delay="50" data-tooltip="请三思而后行！" onClick="deleteSubject();">删除</a>
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" type="submit" onClick="editSubject();">修改</a>
+                <a href="#!" class="modal-action modal-close waves-effect  tooltipped waves-red btn-flat" data-position="bottom" data-delay="50" data-tooltip="请三思而后行！" onClick="deleteSubject();">删除</a>
     </div>
-  </div>	
-     <div id="settings" class="modal">
+  </div>    
+    <div id="settings" class="modal">
         <div class="modal-content">
           <h4 class="center">设置</h4>
           <div class="row">
             <form class="col s10 offset-s1">
-				<div class="row">
-					<div class="col s8">
-						<p>允许学生自由选课</p>
-					</div>
-						<div class="switch">
-							<label>
-							不允许
-							<input id="selectCourse" type="checkbox" <?
-							if($selectOK)
-								echo 'checked="checked"';
-							?>>
-							<span class="lever"></span>
-							允许
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col s7 offset-s1">
-					<p>当前缓存文件大小：<?
-					unset($output);
-					$ret = exec("du -sbch /var/www/html/Grade/log | awk '{print $1}'", $output, $var);
-					echo $output[0];
-					?></p>
-					</div>
-					<a class="waves-effect waves-light btn" onClick="clearLog()">删除缓存文件</a>
-				</div>
+                <div class="row">
+                    <div class="col s8">
+                        <p>允许员工自由选项目</p>
+                    </div>
+                        <div class="switch">
+                            <label>
+                            不允许
+                            <input id="selectCourse" type="checkbox" <?
+                            if ($selectOK) {
+                                echo 'checked="checked"';
+                            }
+                            ?>>
+                            <span class="lever"></span>
+                            允许
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s7 offset-s1">
+                    <p>当前缓存文件大小：<?
+                    unset($output);
+                    $ret = exec("du -sbch /var/www/html/Grade/log | awk '{print $1}'", $output, $var);
+                    echo $output[0];
+                    ?></p>
+                    </div>
+                    <a class="waves-effect waves-light btn" onClick="clearLog()">删除缓存文件</a>
+                </div>
             </form>
           </div>
         </div>
+    </div>
   <!-- Modal Trigger -->
-	<div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
-  	<a class="modal-trigger btn-floating btn-large waves-effect waves-light red"  href="#modalNew"><i class="material-icons">add</i></a>
-	</div>
+    <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+    <a href="#" data-activates="slide-out" id="btn_nav" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light orange"><i class="material-icons">menu</i></a>
+    </div>
+    <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
+        <a href="#modalNew" data-activates="slide-out" class="button-collapse top-nav full modal-trigger btn-floating btn-large waves-effect waves-light red" ><i class="material-icons">add</i></a>
+    </div>
   <!-- Edit Modal Structure -->
   <div id="modalNew" class="modal modal-fixed-footer">
     <div class="modal-content">
-      <h4 class="center">添加课程</h4>
+      <h4 class="center">添加项目</h4>
       <div class="row">
-				<form class="col s10 offset-s1">
+                <form class="col s10 offset-s1">
         <div class="row">
         <div class="input-field col s12">
           <input disabled value="Unknown" id="New_Id" type="text" class="validate">
-          <label for="New_Id">课程ID</label>
+          <label for="New_Id">项目ID</label>
         </div>
       </div>
-	  <div class="row">
+      <div class="row">
         <div class="input-field col s12">
           <input id="New_Name" type="text" class="validate" value="">
-          <label for="New_Name">课程名称</label>
+          <label for="New_Name">名称</label>
         </div>
       </div>
-	  <div class="row">
+      <div class="row">
         <div class="input-field col s12">
           <input id="New_GPA" type="text" class="validate" value="0">
-          <label for="New_GPA">课程绩点</label>
+          <label for="New_GPA">优先级</label>
         </div>
       </div>
-	  <div class="row">
+      <div class="row">
         <div class="input-field col s12">
           <input id="New_Teacher" type="text" class="validate" value="0">
-          <label for="New_Teacher">任课教师</label>
+          <label for="New_Teacher">负责人</label>
         </div>
       </div>
-	  <div class="row">
+      <div class="row">
         <div class="input-field col s12">
           <input id="New_Place" type="text" class="validate" value="0">
-          <label for="New_Place">上课地点</label>
+          <label for="New_Place">分部地点</label>
         </div>
       </div>
-			</form>
+            </form>
       </div>
     </div>
       <div class="modal-footer">
-				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="newSubject();">新建</a>
     </div>
   </div>
@@ -203,8 +219,8 @@ $selectOK = $database->get("select_sb","val",[]);
   <script type="text/javascript" src="../asset/js/jquery.js"></script>
   <script type="text/javascript" src="../asset/materialize/js/materialize.min.js"></script>
 
-	  <!--Sort function starts-->
-	<script type="text/javascript">
+      <!--Sort function starts-->
+    <script type="text/javascript">
         $(function () {
             var tableObject = $('#nihao'); //获取id为tableSort的table对象
             var tbHead = tableObject.children('thead'); //获取table对象下的thead
@@ -312,81 +328,83 @@ $selectOK = $database->get("select_sb","val",[]);
 
         })
     </script>
-	<!--Sort function ends-->
+    <!--Sort function ends-->
 
   <script type="text/javascript">
-	$(document).ready(function(){
-		// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-		$('.modal').modal();
-	});
-	
+    $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+        //$(".button-collapse").sideNav();
+        $("#btn_nav").sideNav();
+    });
+    
 $("#selectCourse").change(function() {
-			if ($("#selectCourse").is(':checked')) {
-				onEditSelectSB(1);
-			}
-			else {
-				onEditSelectSB(0);
-			}
-		});
+            if ($("#selectCourse").is(':checked')) {
+                onEditSelectSB(1);
+            }
+            else {
+                onEditSelectSB(0);
+            }
+        });
 
-	function onEdit($id,$name,$GPA){
-		$("#Edit_Id").val($id);
-		$("#Edit_Name").val($name);
-		$("#Edit_GPA").val($GPA);
-		$("#modalEdit").modal("open");
-	}
-	
-	function editSubject(){
-		$.post("_subject.php",
-			{
-				"id":$("#Edit_Id").val(),
-				"name":$("#Edit_Name").val(),
-				"GPA":$("#Edit_GPA").val(),
-				"type":1
-			},
-			function(data,status){
-				if (data==0){
-					Materialize.toast('No Edition.', 1000);
-				}else if (data>0){
-					Materialize.toast('Edited.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-	}
-	
-	function newSubject(){
-		
-		$.post("_subject.php",
-			{
-				"id":$("#New_Id").val(),
-				"name":$("#New_Name").val(),
-				"GPA":$("#New_GPA").val(),
-				"type":2
-			},
-			function(data,status){
-				if (data>0){
-					Materialize.toast('Succeed.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-		
-	}
-	function showSettings() {
+    function onEdit($id,$name,$GPA){
+        $("#Edit_Id").val($id);
+        $("#Edit_Name").val($name);
+        $("#Edit_GPA").val($GPA);
+        $("#modalEdit").modal("open");
+    }
+    
+    function editSubject(){
+        $.post("_subject.php",
+            {
+                "id":$("#Edit_Id").val(),
+                "name":$("#Edit_Name").val(),
+                "GPA":$("#Edit_GPA").val(),
+                "type":1
+            },
+            function(data,status){
+                if (data==0){
+                    Materialize.toast('No Edition.', 1000);
+                }else if (data>0){
+                    Materialize.toast('Edited.', 1000);
+                    window.location.href="";
+                }else{
+                    Materialize.toast('Error.', 1000);
+                }
+            });
+    }
+    
+    function newSubject(){
+        
+        $.post("_subject.php",
+            {
+                "id":$("#New_Id").val(),
+                "name":$("#New_Name").val(),
+                "GPA":$("#New_GPA").val(),
+                "type":2
+            },
+            function(data,status){
+                if (data>0){
+                    Materialize.toast('Succeed.', 1000);
+                    window.location.href="";
+                }else{
+                    Materialize.toast('Error.', 1000);
+                }
+            });
+        
+    }
+    function showSettings() {
           $("#settings").modal("open");
         } 
 
-		function clearLog() {
-			$.post("_clearLog.php", 
-			{
-				"clear": 1
-			}, function(data, status) {
-				Materialize.toast('已删除缓存文件。', 1000);
-			});
-		}
+        function clearLog() {
+            $.post("_clearLog.php", 
+            {
+                "clear": 1
+            }, function(data, status) {
+                Materialize.toast('已删除缓存文件。', 1000);
+            });
+        }
  function onEditSelectSB($val) {
           $.post("_selectSB.php", {
               "val": $val
@@ -402,33 +420,33 @@ $("#selectCourse").change(function() {
         }
 
 
-	function deleteSubject(){
-		$.post("_subject.php",
-			{
-				"id":$("#Edit_Id").val(),
-				"name":$("#Edit_Name").val(),
-				"GPA":$("#Edit_GPA").val(),
-				"type":3
-			},
-			function(data,status){
-				if (data>0){
-					Materialize.toast('Deleted.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-	}
-	
-	
+    function deleteSubject(){
+        $.post("_subject.php",
+            {
+                "id":$("#Edit_Id").val(),
+                "name":$("#Edit_Name").val(),
+                "GPA":$("#Edit_GPA").val(),
+                "type":3
+            },
+            function(data,status){
+                if (data>0){
+                    Materialize.toast('Deleted.', 1000);
+                    window.location.href="";
+                }else{
+                    Materialize.toast('Error.', 1000);
+                }
+            });
+    }
+    
+    
     function delAllCookie(){    
         $.post("../login/loginLib.php",
-			{
-				"logout":true
-			},
-			function(data,status){
-				window.location.href="";
-			});  
+            {
+                "logout":true
+            },
+            function(data,status){
+                window.location.href="";
+            });  
       } 
   </script>
   </body>

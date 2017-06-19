@@ -1,20 +1,20 @@
 <?
-	require_once(dirname(__FILE__).'/../config.php');
-	require_once(WebRoot."/login/loginLib.php");
-	require_once(WebRoot."/lib/mysql.php");
-	isLogin();
-	header("Content-type:text/html;Charset=utf-8");
+  require_once(dirname(__FILE__).'/../config.php');
+  require_once(WebRoot."/login/loginLib.php");
+  require_once(WebRoot."/lib/mysql.php");
+  isLogin();
+  header("Content-type:text/html;Charset=utf-8");
 ?>
 <!DOCTYPE html>
 <html>
-  <head>		
+  <head>    
   <!--Import materialize.css-->
-  <title>学生-学生成绩管理系统</title>
+  <title>员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32">
 <link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css"  media="screen,projection"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-	<!--Let browser know website is optimized for mobile-->
+  <!--Let browser know website is optimized for mobile-->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   </head>
 
@@ -23,48 +23,54 @@
   $isEdit=false;
   $User=0;
   $Name="";
+  $num=0;
   $Select_sb=false;
   if (isset($_GET["User"])) $User=$_GET["User"];
-  if (isLogin() && getUserType()==1){
-	  $isEdit=false;
-	  $User=getUserID();
+  if (isLogin() && getUserType()==1|| getUserType()==4){
+    $isEdit=false;
+    $User=getUserID();
+    $num=_GetUsernum($User);
       $Name=getName($User);
+      $num=_GetUsernum($User);
       $Phone=$database->get("user","phone",["user"=>$User]);
-	  if($database->get("select_sb","val",[])==1)  $Select_sb=true;
+    if($database->get("select_sb","val",[])==1)  $Select_sb=true;
   }else{
-	  $isEdit=true;
-	  
+    $isEdit=true;
+    
   }?>
   
   <nav>
     <div class="nav-wrapper blue">
     <a href="#" class="brand-logo center"><? echo $database->get("user","name",["user"=>$User]);?></a>
-	<ul id="nav-moblie" class="right hide-on-med-and-down">
-		<li><a href="../login/index.php" onClick="delAllCookie();">退出</a></li>
-	</ul>
-	<ul id="nav-moblie" class="left hide-on-med-and-down">
-		<a href="#modalChange">设置</a>
-	</ul>
-	</div>
+  <ul id="nav-moblie" class="right hide-on-med-and-down">
+    <li><a href="../login/index.php" onClick="delAllCookie();">退出</a></li>
+  </ul>
+  <ul id="nav-moblie" class="left hide-on-med-and-down">
+    <li><a href="#modalChange">设置</a></li>
+    <li><a href="#modalReport">打印报告</a></li>
+    <li><a href="#!" onClick="onEditSubject(<?echo $User;?>,'<?echo $Name;?>',<?echo $num;?>);">选择所属项目</a></li>
+  </ul>
+  </div>
   </nav>
     <div class="container">
   
   <br>
-  <h4 class="center">欢迎，这是您的成绩</h4>
+  <h4 class="center">欢迎，这是您的项目概要</h4>
+  <h5 class="center">您的工号: <?echo $num;?></h5>
   <br>
    <table id="laosan" class="centered white z-depth-3">
           <thead>
             <tr>
               <th type="number">编号</th>
-              <th>课程名</th>
-              <th type="number">绩点</th>
-              <th type="number">成绩</th>
+              <th>项目</th>
+              <th type="number">优先级</th>
+              <th type="number">时长</th>
             </tr>
           </thead>
           <tbody>
             <?
 $nowSubjectArray=$database->select("subject",["id","name","GPA"],[]);
-if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
+if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$database->has("user",["AND"=>["user"=>$User,"type"=>4]])) ){
     foreach($nowSubjectArray as $nowSuject){
         if (!$database->has("subjectBel",["AND" =>["user" => trim($User),'subject'=>trim($nowSuject["id"])]])) continue;
         $sbScore=$database->get("grade", "score", ["AND" =>["user" => trim($User),'subject'=>trim($nowSuject["id"])]]);
@@ -81,21 +87,21 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
                 </td>
                 <td>
                   <button class="waves-effect waves-teal btn-flat" type="button" id="edit" <? if ($isEdit){ ?>onClick="onEdit(<?
-					echo $nowSuject["id"];
-					echo ',\'';
-					echo $nowSuject["name"];
-					echo '\',';
-					echo $User;
-					echo ',\'';
-					echo $Name;
-					echo '\',';
-					if (!is_numeric($sbScore)) echo '100'; else echo $sbScore;
+          echo $nowSuject["id"];
+          echo ',\'';
+          echo $nowSuject["name"];
+          echo '\',';
+          echo $User;
+          echo ',\'';
+          echo $Name;
+          echo '\',';
+          if (!is_numeric($sbScore)) echo '100'; else echo $sbScore;
                 ?>);"
                       <?
         }else{
             ?>onClick="denied();"
                         <?}?>>
-                          <? if (!is_numeric($sbScore)) echo '-'; else echo $sbScore;	?>
+                          <? if (!is_numeric($sbScore)) echo '-'; else echo $sbScore; ?>
                   </button>
                 </td>
               </tr>
@@ -103,25 +109,32 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
               <?}}else echo '<div class="center">No Such a Student.</br>Maybe Error.</div>'?>
           </tbody>
         </table>
+        <span class="modal-footer">
+    <div class="fixed-action-btn horizontal" style="bottom: 120px; right: 24px;">
+        <a class="btn-floating btn-large red">
+          <i class="large material-icons">account_circle</i>
+        </a>
+        <ul>
+          <li><a class="btn-floating green" href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>');"><i class="material-icons">play_arrow</i></a></li>
+          <li><a class="btn-floating red" href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">stop</i></a></li>
+        </ul>
+      </div>
+  </span>  
   <span class="modal-footer">
-	<div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red <? if (!($Select_sb)) echo " disabled tooltipped"?>" 
-		<?
-		if(!($Select_sb)) {
-		?>
-		 data-position="left" data-delay="50" data-tooltip="管理员关闭了选课"
-		<?}?>
-		href="#" id="edit" onClick="onEditSubject(<?echo $User;?>,'<?echo $Name;?>');"><i class="material-icons">add</i></a>
-	</div>
+  <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
+        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
+
+    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"<i class="material-icons">assignment</i></a>
+  </div>
   </span> 
 </div>
   <!-- Edit Modal Change -->
   <div id="modalChange" class="modal modal-fixed-footer">
       <div class="modal-content">
-	  <br>
-          <h4><div id="Edit_Title" class="center">设置密码</div></h4>
+    <br>
+          <h4><div id="Edit_Title" class="center">设置</div></h4>
           <br>
-		  <div class="row">
+      <div class="row">
               <div class="input-field col s10 offset-s1">
                   <input disabled value="<?echo $User;?>" id="Student_ID" type="text" class="validate">
                   <label for="Edit_ID">学号</label>
@@ -133,6 +146,17 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
                   <label for="Edit_User">姓名</label>
               </div>
           </div>
+        <div class="row">
+          <div class="input-field col s10 offset-s1">
+            <select id="Edit_Pay" type="text" class="validate" value="">
+              <option value="" disabled selected>请选择一项</option>
+              <option value="pickup">现金</option>
+              <option value="deposit">存款</option>
+              <option value="mail">邮寄</option>
+              </select>
+              <label for="Edit_Pay">薪水支付方式</label>
+          </div>
+        </div>
           <div class="row">
               <div class="input-field col s10 offset-s1">
                   <input value="<?echo $Phone;?>" id="Edit_Phone" type="text" class="validate">
@@ -158,22 +182,22 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
   <!-- Edit Modal Structure -->
   <div id="modalEdit" class="modal modal-fixed-footer">
     <div class="modal-content">
-	<br>
+  <br>
       <h4 class="center"><div id="Edit_Title">Edit Score</div></h4>
       <br>
-	  <div class="row">
+    <div class="row">
         <div class="input-field col s10 offset-s1">
           <input disabled value="0" id="Edit_ID" type="text" class="validate">
           <label for="Edit_ID">ID</label>
         </div>
       </div>
-	  <div class="row">
+    <div class="row">
         <div class="input-field col s10 offset-s1">
           <input disabled value="0" id="Edit_User" type="text" class="validate">
           <label for="Edit_User">学号</label>
         </div>
       </div>
-	  <div class="row">
+    <div class="row">
         <div class="input-field col s10 offset-s1">
           <input id="Edit_Score" type="text" class="validate" value="0">
           <label for="Edit_Score">成绩</label>
@@ -182,8 +206,8 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
     </div>
       <div class="modal-footer">
 
-	  <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat" onClick="deleteScore();">删除</a>
-	  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat" onClick="deleteScore();">删除</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">取消</a>
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editScore();">确定</a>
     </div>
   </div>
@@ -192,36 +216,205 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
   <!-- Edit Modal Structure -->
   <div id="modalSubject" class="modal modal-fixed-footer">
     <div class="modal-content">
-	<br>
+  <br>
       <h4 class="center" id="SB_Title">Edit Subject For ???</h4>
-	  <br>
+    <br>
       <div class="row">
         <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="SB_Num" type="text" class="validate">
+          <label for="SB_User">工号</label>
+        </div>
+        <div class="input-field col s10 offset-s1">
           <input disabled value="0" id="SB_User" type="text" class="validate">
-          <label for="SB_User">学号</label>
+          <label for="SB_User">用户名</label>
         </div>
         <div class="input-field col s10 offset-s1">
           <?
-			$nowSubjectArray=$database->select("subject",["id","name"],[]);
-			foreach($nowSubjectArray as $nowSubject){
-				?>
-		  <p>
-		    <input type="checkbox" checked="checked" id="Subject-<?echo $nowSubject["id"];?>" />
-		    <label for="<?echo 'Subject-'.$nowSubject["id"];?>"><?echo $nowSubject["name"];?></label>
-		  </p>
-				<?
-			}
-		  ?>
+      $nowSubjectArray=$database->select("subject",["id","name"],[]);
+      foreach($nowSubjectArray as $nowSubject){
+        ?>
+      <p>
+        <input type="checkbox" checked="checked" id="Subject-<?echo $nowSubject["id"];?>" />
+        <label for="<?echo 'Subject-'.$nowSubject["id"];?>"><?echo $nowSubject["name"];?></label>
+      </p>
+        <?
+      }
+      ?>
         </div>
       </div>
-	</div>
+  </div>
     <div class="modal-footer">
       <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editBelongSubject();">确定</a>
-	  <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick='window.location.href="";'>取消</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick='window.location.href="";'>取消</a>
+    </div>
+  </div>
+
+<div id="modalProject" class="modal modal-fixed-footer">
+    <div class="modal-content">
+  <br>
+      <h4 class="center" id="Pro_Title">Edit Subject For ???</h4>
+    <br>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="Pro_User" type="text" class="validate">
+          <label for="Pro_User">员工号</label>
+        </div>
+        <div class="input-field col s12 offset-s1">
+        <select id = "select">
+        <option value="" disable selected>Choose your option</option>
+        <?
+      $nowSubjectArray=$database->select("subject",["id","name"],[]);
+      foreach($nowSubjectArray as $nowSubject){
+        if (!$database->has("subjectBel",["AND" =>["user" => trim($User),'subject'=>trim($nowSubject["id"])]])) continue;
+        ?>
+                <option value = "<?echo $nowSubject["id"];?>"><?echo $nowSubject["name"];?></option>  
+      <?
+      }
+      ?>
+        </select>
+        <label>下拉列表</label>
+        </div>
+      </div>
+  </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editbelProject();">确定</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick='window.location.href="";'>取消</a>
     </div>
   </div>
 
 
+
+<div id="timecard" class="modal modal-fixed-footer">
+    <div class="modal-content">
+  <br>
+      <h4 class="center" id="SBT_Title">Edit Subject For ???</h4>
+    <br>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="SBT_User" type="text" class="validate">
+          <label for="SBT_User">员工号</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="SBTT_User" type="text" class="validate">
+          <label for="SBTT_User">上班时间</label>
+        </div>
+      </div>
+  </div>
+ </div>
+
+
+<div id="endtimecard" class="modal modal-fixed-footer">
+    <div class="modal-content">
+  <br>
+      <h4 class="center" id="END_Title">Edit Subject For ???</h4>
+    <br>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_User" type="text" class="validate">
+          <label for="END_User">员工号</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_name" type="text" class="validate">
+          <label for="END_name">姓名</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_BTime" type="text" class="validate">
+          <label for="END_BTime">上班时间</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_Time" type="text" class="validate">
+          <label for="END_Time">下班时间</label>
+        </div>
+      </div>
+       <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_project" type="text" class="validate">
+          <label for="END_project">项目</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s10 offset-s1">
+          <input disabled value="0" id="END_pname" type="text" class="validate">
+          <label for="END_pname">项目</label>
+        </div>
+      </div>
+  </div>
+   <div class="modal-footer">
+      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="editTimecard();">确定</a>
+    <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick='window.location.href="";'>取消</a>
+    </div>
+  </div>
+
+      <!-- Edit Modal Structure -->
+      <div id="modalReport" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4 class="center">配置报告</h4>
+          <div class="row">
+            <form class="col s10 offset-s1">
+             <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="<?echo $User;?>" id="REdit_User" type="text" class="validate">
+                  <label>账号</label>
+                </div>
+              </div>
+             <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="<?echo $Name;?>" id="REdit_Name" type="text" class="validate">
+                  <label>姓名</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <select id="RE_Type">
+                    <option value="" disabled selected>请选择报告类型</option>
+                    <option value="1">总工作时长</option>
+                    <option value="2">年初至今工资</option>
+                  </select>
+                  <label>类型</label>
+                </div>
+              </div>
+              <label for="RE_Begin">起始日期</label>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="RE_Begin" type="date" class="validate" value="">
+                </div>
+              </div>
+              <label for="RE_End">终止日期</label>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="RE_End" type="date" class="validate" value="">
+                </div>
+              </div>
+
+             <div class="row">
+                <div class="input-field col s12">
+                  <input value="NULL" id="RE_Name" type="text" class="validate">
+                  <label for="RE_Name">报名名称</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input disabled value="NULL" id="RE_Pos" type="text" class="validate">
+                  <label for="RE_Pos">存储位置</label>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">返回</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onClick="print();">确定</a>
+        </div>
+      </div>
 
   <!--Import jQuery before materialize.js-->
   <script type="text/javascript" src="../asset/js/jquery.js"></script>
@@ -229,7 +422,7 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
 
 
       <!--Sort function starts-->
-	<script type="text/javascript">
+  <script type="text/javascript">
         $(function () {
             var tableObject = $('#laosan'); //获取id为tableSort的table对象
             var tbHead = tableObject.children('thead'); //获取table对象下的thead
@@ -337,81 +530,200 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
 
         })
     </script>
-	<!--Sort function ends-->
-	
+  <!--Sort function ends-->
+  
 
   <script type="text/javascript">
-	$(document).ready(function(){
-		// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-		$('.modal').modal();
-	});
-	
-	function onEdit($sb_id,$sb_name,$user,$score){
-		$("#Edit_ID").val($sb_id);
-		$("#Edit_Title").html($sb_name);
-		$("#Edit_Score").val($score);
-		$("#Edit_User").val($user);
-		$("#modalEdit").modal("open");
-	}
-	
-	function editScore(){
-		$.post("_grade.php",
-			{
-				"subject":$("#Edit_ID").val(),
-				"user":$("#Edit_User").val(),
-				"score":$("#Edit_Score").val(),
-				"type":1
-			},
-			function(data,status){
-				if (data==0){
-					Materialize.toast('No Edition.', 1000);
-				}else if (data>0){
-					Materialize.toast('Edited.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-	}
-	function onEditSubject($user,$name){
-		$.post("_belSubject.php",
-		{
-			"user":$user
-		},
-		function(data,status){
-			JSON.parse(data,function (k, v) {
-				console.log(k);
-				console.log(v);
-				if (v==0){
-					//$(k).removeAttr("checked");
-					$(k).attr("checked",false);
-				}else{
-					$(k).attr("checked",true);
-				}
-				
-			});
-			$("#SB_User").val($user);
-			$("#SB_Title").text("选课 - " + $name);
-			$("#modalSubject").modal("open");
-		});
-	}
+  $(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal').modal();
+          $("#RE_Begin").hide();
+          $("#RE_End").hide();
+          $("#RE_Type").change(function(){
+              var p1=$(this).children('option:selected').val();
+              if(p1==2){
+                $("#RE_Begin").hide();
+                $("#RE_End").hide();
+              }
+              else{
+                $("#RE_Begin").show();
+                $("#RE_End").show();                
+              }
+          });
+    $('select').material_select();
+  });
+  
+  function onEdit($sb_id,$sb_name,$user,$score){
+    $("#Edit_ID").val($sb_id);
+    $("#Edit_Title").html($sb_name);
+    $("#Edit_Score").val($score);
+    $("#Edit_User").val($user);
+    $("#modalEdit").modal("open");
+  }
+  
+  function editScore(){
+    $.post("_grade.php",
+      {
+        "subject":$("#Edit_ID").val(),
+        "user":$("#Edit_User").val(),
+        "score":$("#Edit_Score").val(),
+        "type":1
+      },
+      function(data,status){
+        if (data==0){
+          Materialize.toast('No Edition.', 1000);
+        }else if (data>0){
+          Materialize.toast('Edited.', 1000);
+          window.location.href="";
+        }else{
+          Materialize.toast('Error.', 1000);
+        }
+      });
+  }
+  function onEditSubject($user,$name,$num){
+    $.post("_belSubject.php",
+    {
+      "user":$user
+    },
+    function(data,status){
+      JSON.parse(data,function (k, v) {
+        console.log(k);
+        console.log(v);
+        if (v==0){
+          //$(k).removeAttr("checked");
+          $(k).attr("checked",false);
+        }else{
+          $(k).attr("checked",true);
+        }
 
-	function editBelongSubject(){
-		$.post("_belSubjectEdit.php",
-		{
-		<?
-			$nowSubjectArray=$database->select("subject",["id"],[]);
-			foreach($nowSubjectArray as $nowSubject)
-				echo "\"Subject-".$nowSubject['id']."\":$(\"#Subject-".$nowSubject['id']."\").is(\":checked\"),";
-			echo "\"user\":\$(\"#SB_User\").val()";
-		?>
-		},
-		function(data,status){
-			//alert(data);
-			Materialize.toast('Requested.', 1000);
-			window.location.href="";
-		});
-	}
+      });
+      $("#SB_Num").val($num);
+      $("#SB_User").val($user);
+      $("#SB_Title").text("选择项目 - " + $name);
+      $("#modalSubject").modal("open");
+    });
+  }
+    function editTimecard()
+    {
+        $.post("_belfinalTime.php",
+    {
+      "user":$("#END_User").val(),
+            "begintime":$("#END_BTime").val(),
+            "endtime":$("#END_Time").val(),
+            "name":$("#END_name").val(),
+            "project":$("#END_project").val()
+    },
+    function(data,status){
+            if (data == 0)
+            {
+                Materialize.toast('No Timecard.', 1000);
+            }
+            else if (data > 0){
+               Materialize.toast('Thanks.', 1000);
+            }
+  
+    });
+    }
+    function onEndtime($user,$name,$time,$project){
+    $.post("_belendTime.php",
+    {
+      "user":$user,
+            "time":$time,
+            "project":$project
+    },
+    function(data,status){
+            JSON.parse(data,function (k, v) {
+                console.log(k);
+        console.log(v);
+                $(k).val(v);
+      });
+                $("#END_User").val($user);
+          $("#END_Title").text("打卡 - " + $name);
+                $("#END_Time").val($time);
+                $("#END_name").val($name);
+                $("#END_project").val($project);
+          $("#endtimecard").modal("open");
+    });
+  }
+    function editbelProject($user)
+    {
+        $.post("_beleditProject.php",
+    {
+      "user":$("#Pro_User").val(),
+            "project":$("#select").val()
+    },
+    function(data,status){
+            if (data > 0)
+            {
+               Materialize.toast('Success.', 1000);
+               $("#BProject").val($("#select").val());
+               window.location.href="";
+            }
+            else if (data == 0){
+               Materialize.toast('Error.', 1000);
+               window.location.href="";
+            }
+            else if (data == -1)
+            {
+                Materialize.toast('请首先打卡.', 1000);
+                window.location.href="";
+            }
+      
+    });
+    }
+    function onSelectproject($user,$name)
+    {
+       $.post("_belProject.php",
+    {
+      "user":$user
+    },
+    function(data,status){
+      $("#Pro_User").val($user);
+      $("#Pro_Title").text("选择项目 - " + $name);
+      $("#modalProject").modal("open");
+    });
+    }
+    function onBegintime($user,$name,$time){
+    $.post("_belTime.php",
+    {
+      "user":$user,
+            "time":$time
+    },
+    function(data,status){
+            if (data == 1)
+            {
+                $("#SBT_User").val($user);
+          $("#SBT_Title").text("打卡 - " + $name);
+                $("#SBTT_User").val($time);
+                $("#BProject").val("请选择项目");
+          $("#timecard").modal("open");
+            }
+            else{
+                $("#SBT_User").val($user);
+          $("#SBT_Title").text("打卡 - " + $name);
+                $("#SBTT_User").val(data);
+          $("#timecard").modal("open");
+            }
+      
+    });
+  }
+
+  function editBelongSubject(){
+    $.post("_belSubjectEdit.php",
+    {
+    <?
+      $nowSubjectArray=$database->select("subject",["id"],[]);
+      foreach($nowSubjectArray as $nowSubject)
+        echo "\"Subject-".$nowSubject['id']."\":$(\"#Subject-".$nowSubject['id']."\").is(\":checked\"),";
+      echo "\"user\":\$(\"#SB_User\").val()";
+    ?>
+    },
+    function(data,status){
+      //alert(data);
+      Materialize.toast('Requested.', 1000);
+      window.location.href="";
+    });
+  }
     function editPassword(){
         $.post("_userpassword.php",
             {
@@ -419,6 +731,7 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
                 "name":$("#Student_Name").val(),
                 "password":$("#Edit_Password").val(),
                 "phone":$("#Edit_Phone").val(),
+                "pay_method": $("#Edit_Pay").val(),
                 "type":1
             },
             function(data,status){
@@ -434,54 +747,101 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
     }
 
 
-	function denied(){
-		Materialize.toast('您没有权限修改', 1000);
-	}
-	
-	function deleteScore(){
-		$.post("_grade.php",
-			{
-				"subject":$("#Edit_ID").val(),
-				"user":$("#Edit_User").val(),
-				"score":$("#Edit_Score").val(),
-				"type":3
-			},
-			function(data,status){
-				if (data>0){
-					Materialize.toast('Deleted.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-	}
-	
-	function onEditSelectSB($val){
-		$.post("_selectSB.php",
-			{
-				"val":$val
-			},
-			function(data,status){
-				if (data>0){
-					Materialize.toast('Accepted.', 1000);
-					window.location.href="";
-				}else{
-					Materialize.toast('Error.', 1000);
-				}
-			});
-	}
+  function denied(){
+    Materialize.toast('您没有权限修改', 1000);
+  }
+  
+  function deleteScore(){
+    $.post("_grade.php",
+      {
+        "subject":$("#Edit_ID").val(),
+        "user":$("#Edit_User").val(),
+        "score":$("#Edit_Score").val(),
+        "type":3
+      },
+      function(data,status){
+        if (data>0){
+          Materialize.toast('Deleted.', 1000);
+          window.location.href="";
+        }else{
+          Materialize.toast('Error.', 1000);
+        }
+      });
+  }
+  
+  function onEditSelectSB($val){
+    $.post("_selectSB.php",
+      {
+        "val":$val
+      },
+      function(data,status){
+        if (data>0){
+          Materialize.toast('Accepted.', 1000);
+          window.location.href="";
+        }else{
+          Materialize.toast('Error.', 1000);
+        }
+      });
+  }
 
+
+        function print() {
+          var p1=$("#RE_Type").val();
+          var name=$("#REdit_Name").val();
+          if(p1==1){
+          $.post("_printReport.php", {
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
+              "re_name": $("#RE_Name").val(),
+              "re_begin": $("#RE_Begin").val(),
+              "re_end": $("#RE_End").val(),
+              "re_path": $("#RE_Pos").val(),
+              "type": 1
+            },
+            function(data, status) {
+                console.log(data);
+                if(data > 0)
+                {
+                  Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'work_report.html');
+                }
+                else
+                  Materialize.toast('Error.', 1000);
+            });
+          }
+          else if(p1==2){
+              $.post("_printReport.php", {
+              "user": $("#REdit_User").val(),
+              "name": $("#REdit_Name").val(),
+              "re_name": $("#RE_Name").val(),
+              "re_path": $("#RE_Pos").val(),
+              "type": 2
+            },
+            function(data, status) {
+                console.log(data);
+                if(data > 0)
+                {
+                  Materialize.toast('Requested.', 1000);
+                  window.open('./'+name+'pay_report.html');
+                }
+                else
+                  Materialize.toast('Error.', 1000);
+            });
+          }
+          
+
+        }
     //删除cookie中所有定变量函数    
     function delAllCookie(){    
         $.post("../login/loginLib.php",
-			{
-				"logout":true
-			},
-			function(data,status){
-				window.location.href="";
-			});  
+      {
+        "logout":true
+      },
+      function(data,status){
+        window.location.href="";
+      });  
       }          
-	
+  
   </script>
   </body>
 </html>

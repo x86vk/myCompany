@@ -9,7 +9,8 @@
 		if (getUserType()==TypeTeacher){
 			Header("Location: ".WebUrl."/teacher/index.php");
 		}
-		if (getUserType()==TypeStudent){
+		if (getUserType()==TypeStudent || getUserType()==HourEmp){
+			echo getUserType()."fuck\n";
 			Header("Location: ".WebUrl."/student/index.php");
 		}
 	}

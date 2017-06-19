@@ -9,27 +9,22 @@ require_once(WebRoot."/lib/mysql.php");
 
   <head>
     <!--Import materialize.css-->
-    <title>学生成绩-教师-学生成绩管理系统</title>
+    <title>项目-委托员工-ACME公司管理系统</title>
   <link rel="shortcut icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" size="32x32">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="icon" href="../icons/material-design-icons/action/1x_web/ic_account_circle_black_48dp.png" sizes="32x32"><link type="text/css" rel="stylesheet" href="../asset/materialize/css/materialize.min.css" media="screen,projection" />
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   </head>
 
   <body class=" grey lighten-3">
-    <nav>
+     <nav>
       <div class="nav-wrapper">
-        <a href="#" class="brand-logo center">教师</a>
-        <ul id="nav-moblie" class="right hide-on-med-and-down">
-          <li><a href="../login/index.php" onClick="delAllCookie();">登出</a></li>
-        </ul>
+        <a href="#" class="brand-logo center"><i class="material-icons">perm_identity</i>委托员工</a>
       </div>
     </nav>
-    <div class="container">
-      <br>
-      <h4 class="center">这是学生<?echo $_GET["User"];?>的成绩</h4>
-      <br>
-      <?
+ 
+<?
 $isEdit=false;
 $User=0;
 if (isset($_GET["User"])) $User=$_GET["User"];
@@ -41,13 +36,18 @@ if (isLogin() && getUserType()==1){
 	  $Name=getName($User);
 }?>
 
+    <div class="container">
+      <br>
+      <h4 class="center">这是员工<?echo $Name;?>的概况</h4>
+      <br>
+
         <table id="grade" class="centered white z-depth-3">
           <thead>
             <tr>
               <th type="number">编号</th>
-              <th>课程名</th>
-              <th type="number">绩点</th>
-              <th type="number">成绩</th>
+              <th>项目名</th>
+              <th type="number">优先级</th>
+              <th type="number">时长</th>
             </tr>
           </thead>
           <tbody>
@@ -102,25 +102,25 @@ if ($User!=0 && $database->has("user",["AND"=>["user"=>$User,"type"=>1]])){
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input disabled value="0" id="Edit_ID" type="text" class="validate">
-            <label for="Edit_ID">课程ID</label>
+            <label for="Edit_ID">项目ID</label>
           </div>
         </div>
         <div class="row">
             <div class="input-field col s10 offset-s1">
               <input disabled value="0" id="Edit_Name" type="text" class="validate">
-              <label for="Edit_Name">学生姓名</label>
+              <label for="Edit_Name">姓名</label>
             </div>
         </div>
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input disabled value="0" id="Edit_User" type="text" class="validate">
-            <label for="Edit_User">学号</label>
+            <label for="Edit_User">用户名</label>
           </div>
         </div>
         <div class="row">
           <div class="input-field col s10 offset-s1">
             <input id="Edit_Score" type="text" class="validate" value="0">
-            <label for="Edit_Score">分数</label>
+            <label for="Edit_Score">时长</label>
           </div>
         </div>
       </div>
