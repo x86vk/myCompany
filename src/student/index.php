@@ -109,23 +109,22 @@ if ($User!=0 && ($database->has("user",["AND"=>["user"=>$User,"type"=>1]])||$dat
               <?}}else echo '<div class="center">No Such a Student.</br>Maybe Error.</div>'?>
           </tbody>
         </table>
-  <span class="modal-footer">
-  <div class="fixed-action-btn" style="bottom: 120px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red"
-    href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">结束</i></a>
-  </div>
-  </span> 
-  <span class="modal-footer">
-  <div class="fixed-action-btn" style="bottom: 192px; right: 24px;">
-        <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
-    href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>');"<i class="material-icons">开始</i></a>
-  </div>
-  </span> 
+        <span class="modal-footer">
+    <div class="fixed-action-btn horizontal" style="bottom: 120px; right: 24px;">
+        <a class="btn-floating btn-large red">
+          <i class="large material-icons">account_circle</i>
+        </a>
+        <ul>
+          <li><a class="btn-floating green" href="#" id="edit" onClick="onBegintime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>');"><i class="material-icons">play_arrow</i></a></li>
+          <li><a class="btn-floating red" href="#" id="edit" onClick="onEndtime(<?echo $User;?>,'<?echo $Name;?>','<?echo date("Y-m-d H:i:s",time());?>','<?echo $database->get("employeetimecard","project",["id"=>$User])?>');"><i class="material-icons">stop</i></a></li>
+        </ul>
+      </div>
+  </span>  
   <span class="modal-footer">
   <div class="fixed-action-btn" style="bottom: 48px; right: 24px;">
         <a class="modal-trigger btn-floating btn-large waves-effect waves-light red" 
 
-    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"<i class="material-icons">项目</i></a>
+    href="#" id="edit" onClick="onSelectproject(<?echo $User;?>,'<?echo $Name;?>');"<i class="material-icons">assignment</i></a>
   </div>
   </span> 
 </div>
